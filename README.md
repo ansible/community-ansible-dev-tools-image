@@ -1,6 +1,6 @@
 # ansible-dev-tools-container-community
 
-This repo contains the files and configuration to build the `ansible-dev-tools` container.
+This repo contains the files and configuration to build a container called `ansible-dev-tool-container-community`
 
 When available the `ansible-dev-tools` container can be used:
 
