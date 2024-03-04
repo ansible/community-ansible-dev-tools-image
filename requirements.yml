@@ -1,0 +1,5 @@
+---
+collections:
+  - name: ansible.netcommon
+  - name: ansible.scm
+  - name: ansible.utils

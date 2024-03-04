@@ -1,0 +1,1 @@
+FROM localhost/community-ansible-dev-tools-container:latest

@@ -1,0 +1,17 @@
+{
+	"name": "ansible-dev-container-podman",
+	"image": "localhost/community-ansible-dev-tools-container:latest",
+	"containerUser": "podman",
+	"runArgs": [
+		"--userns=keep-id:uid=1000,gid=1000",
+		"--hostname=ansible-dev-container"
+	],
+	"updateRemoteUserUID": true,
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"redhat.ansible"
+			]
+		}
+	}
+}

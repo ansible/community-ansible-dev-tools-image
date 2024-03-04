@@ -1,0 +1,31 @@
+---
+version: 3
+
+images:
+  base_image:
+    name: localhost/community-ansible-dev-tools-container-base:latest
+
+dependencies:
+  ansible_runner:
+    package_pip: ansible-runner
+  
+  ansible_core:
+    package_pip: ansible-core
+
+  galaxy: requirements.yml
+      
+  python: requirements.txt
+
+  system: bindep.txt
+
+options:
+  package_manager_path: /usr/bin/microdnf
+  user: podman
+  workdir: /home/podman
+
+additional_build_steps:
+  prepend_base:
+    - LABEL org.opencontainers.image.source https://github.com/ansible-community/community-ansible-dev-tools-container
+    - LABEL org.opencontainers.image.authors "Ansible DevTools"
+    - LABEL org.opencontainers.image.vendor "Red Hat"
+    - LABEL org.opencontainers.image.licenses "GPL-3.0"
