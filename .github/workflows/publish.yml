@@ -19,6 +19,6 @@ jobs:
 
       - name: Build the image
         run: |
-          docker build -f $GITHUB_WORKSPACE/base/ContainerFile -t community-ansible-dev-tools-container-base
+          docker build . -f $GITHUB_WORKSPACE/base/ContainerFile -t community-ansible-dev-tools-container-base
           ansible-builder build -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/nilashishc/community-ansible-dev-tools-container:latest -v3                     
           docker push ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
