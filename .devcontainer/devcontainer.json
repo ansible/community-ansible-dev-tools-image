@@ -1,6 +1,6 @@
 {
 	"name": "ansible-dev-container-codespaces",
-	"image": "localhost/community-ansible-dev-tools-container:latest",
+	"image": "quay.io/podman/hello:latest",
 	"containerUser": "podman",
 	"runArgs": [
 		"--security-opt",
@@ -13,6 +13,7 @@
 		"/dev/fuse",
 		"--security-opt",
 		"apparmor=unconfined",
+		"--userns=keep-id:uid=1000,gid=1000",
 		"--hostname=ansible-dev-container"
 	],
 	"updateRemoteUserUID": true,

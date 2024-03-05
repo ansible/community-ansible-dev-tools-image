@@ -3,6 +3,16 @@
 	"image": "localhost/community-ansible-dev-tools-container:latest",
 	"containerUser": "podman",
 	"runArgs": [
+		"--security-opt",
+		"seccomp=unconfined",
+		"--security-opt",
+		"label=disable",
+		"--cap-add=SYS_ADMIN",
+		"--cap-add=SYS_RESOURCE",
+		"--device",
+		"/dev/fuse",
+		"--security-opt",
+		"apparmor=unconfined",
 		"--userns=keep-id:uid=1000,gid=1000",
 		"--hostname=ansible-dev-container"
 	],

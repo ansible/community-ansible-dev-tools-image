@@ -13,6 +13,7 @@
 		"/dev/fuse",
 		"--security-opt",
 		"apparmor=unconfined",
+		"--userns=keep-id:uid=1000,gid=1000",
 		"--hostname=ansible-dev-container"
 	],
 	"updateRemoteUserUID": true,
