@@ -6,9 +6,10 @@ ansible-navigator:
     file: $PWD/.logs/ansible-navigator.log
   
   execution-environment:
+    enabled: true
     image: ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
     pull:
-      policy: never
+      policy: always
 
   playbook-artifact:
     enable: True

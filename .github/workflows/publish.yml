@@ -27,8 +27,8 @@ jobs:
       - name: List available images
         run: |
           podman images
-      
+
       - name: Build and publish final image
         run: |
-          ansible-builder build -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/nilashishc/community-ansible-dev-tools-container:latest -v3               
-          podman push ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
+          ansible-builder build -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/${{ github.actor }}/community-ansible-dev-tools-container:latest -v3
+          podman push ghcr.io/${{ github.actor }}/community-ansible-dev-tools-container:latest
