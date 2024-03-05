@@ -1,6 +1,6 @@
 {
 	"name": "ansible-dev-container-docker",
-	"image": "localhost/community-ansible-dev-tools-container:latest",
+	"image": "ghcr.io/nilashishc/community-ansible-dev-tools-container:latest",
 	"containerUser": "podman",
 	"runArgs": [
 		"--security-opt",
