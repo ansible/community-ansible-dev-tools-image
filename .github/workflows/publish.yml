@@ -13,12 +13,22 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Print podman version
+        run: podman version
 
       - name: Install ansible-builder
         run: python3 -m pip install ansible-builder
 
-      - name: Build the image
+      - name: Build the base image
         run: |
           docker build . -f $GITHUB_WORKSPACE/base/ContainerFile -t community-ansible-dev-tools-container-base
-          ansible-builder build -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/nilashishc/community-ansible-dev-tools-container:latest -v3                     
+
+      - name: List available images
+        run: |
+          docker images
+      
+      - name: Build and publish final image
+        run: |
+          ansible-builder build --container-engine=docker -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/nilashishc/community-ansible-dev-tools-container:latest -v3               
           docker push ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
