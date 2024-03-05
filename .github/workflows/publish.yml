@@ -22,13 +22,13 @@ jobs:
 
       - name: Build the base image
         run: |
-          docker build . -f $GITHUB_WORKSPACE/base/ContainerFile -t community-ansible-dev-tools-container-base
+          podman build -t community-ansible-dev-tools-container-base -f $GITHUB_WORKSPACE/base/ContainerFile
 
       - name: List available images
         run: |
-          docker images
+          podman images
       
       - name: Build and publish final image
         run: |
-          ansible-builder build --container-runtime=docker -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/nilashishc/community-ansible-dev-tools-container:latest -v3               
-          docker push ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
+          ansible-builder build -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/nilashishc/community-ansible-dev-tools-container:latest -v3               
+          podman push ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
