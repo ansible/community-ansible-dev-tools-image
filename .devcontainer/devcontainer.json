@@ -1,6 +1,6 @@
 {
 	"name": "ansible-dev-container-codespaces",
-	"image": "quay.io/podman/hello:latest",
+	"image": "localhost/community-ansible-dev-tools-container:latest",
 	"containerUser": "podman",
 	"runArgs": [
 		"--security-opt",
