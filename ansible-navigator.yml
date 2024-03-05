@@ -4,6 +4,11 @@ ansible-navigator:
     level: debug
     append: False
     file: $PWD/.logs/ansible-navigator.log
+  
+  execution-environment:
+    image: ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
+    pull:
+      policy: never
 
   playbook-artifact:
     enable: True

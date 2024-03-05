@@ -1,10 +1,10 @@
 schemaVersion: 2.2.2
 metadata:
-  name: container-in-container
+  name: community-ansible-dev-tools-container
 components:
   - name: tooling-container
     container:
-      image: ghcr.io/cidrblock/container-in-container
+      image: ghcr.io/nilashishc/community-ansible-dev-tools-container:latest
       memoryRequest: 200M
       memoryLimit: 6Gi
       cpuRequest: 250m
