@@ -32,6 +32,10 @@ additional_build_steps:
     - LABEL org.opencontainers.image.vendor "Red Hat"
     - LABEL org.opencontainers.image.licenses "GPL-3.0"
   append_final:
+    # Related to https://github.com/ohmyzsh/ohmyzsh/issues/6835
+    # This is done in the original base image, but, somewhere in
+    # between the builder base and the builder final image this gets changed to 775
+    - RUN chmod 755 /home/podman/.oh-my-zsh && chmod 755 /home/podman/.oh-my-zsh/cache
     # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
     - RUN set -ex
         && ansible --version

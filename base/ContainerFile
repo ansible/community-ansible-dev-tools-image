@@ -82,6 +82,7 @@ RUN chsh -s $(which zsh) podman
 
 USER podman
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# Related to https://github.com/ohmyzsh/ohmyzsh/issues/6835
 RUN \
 chmod 755 /home/podman/.oh-my-zsh && \
 chmod 755 /home/podman/.oh-my-zsh/cache

@@ -8,4 +8,5 @@ The `community-ansible-dev-tools-container` container can be used:
 * A dev container with VSCode
 * A dev container for Github code spaces
 * A canned development environment from the command line with:
-    `podman run --userns=keep-id:uid=1000,gid=1000 -it ghcr.io/ansible-community/community-ansible-dev-tools-container:latest`
+
+    `podman run -it ghcr.io/ansible-community/community-ansible-dev-tools-container:latest`
