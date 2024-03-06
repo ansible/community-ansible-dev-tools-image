@@ -1,28 +1,2 @@
-python3-devel
-dumb-init
-# ansible-pylibssh needs:
-gcc
-git-core
-libssh-devel
-
-# ansible-navigator needs:
-oniguruma-devel
-podman
-python3-bcrypt
-python3-cffi
-python3-markupsafe
-
-# pypi has binaries with better security:
-# python3-cryptography
-python3-pip
-# TO-DO: Do we need this?
-python3-pynacl
-# TO-DO: Do we need this?
-python3-pyrsistent
-python3-pyyaml
-python3-ruamel-yaml
-python3-wheel
-
-
 # From creator-ee
 ncurses

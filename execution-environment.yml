@@ -29,3 +29,18 @@ additional_build_steps:
     - LABEL org.opencontainers.image.authors "Ansible DevTools"
     - LABEL org.opencontainers.image.vendor "Red Hat"
     - LABEL org.opencontainers.image.licenses "GPL-3.0"
+  append_final:
+    # TO-DO: Add ansible-galaxy role list
+    # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
+    - RUN set -ex
+        && ansible --version
+        && ansible-lint --version
+        && ansible-runner --version
+        && molecule --version
+        && molecule drivers
+        && podman --version
+        && python3 --version
+        && git --version
+        && ansible-galaxy collection list
+        && rpm -qa
+        && uname -a
