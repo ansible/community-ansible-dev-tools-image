@@ -19,6 +19,8 @@ dependencies:
   system: bindep.txt
 
 options:
+  container_init:
+    entrypoint: '["/usr/bin/zsh"]'
   package_manager_path: /usr/bin/microdnf
   user: podman
   workdir: /home/podman

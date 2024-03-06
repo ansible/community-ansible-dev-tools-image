@@ -4,8 +4,8 @@ This repo contains the files and configuration to build a container called `comm
 
 The `community-ansible-dev-tools-container` container can be used:
 
-1) As an ansible execution environment or ansible execution environment base image
-2) A dev container with VSCode
-3) A dev container for Github code spaces
-4) A canned development environment from the command line with:
-    `podman run -it ghcr.io/ansible-community/community-ansible-dev-tools-container:latest /bin/zsh`
+* As an ansible execution environment or ansible execution environment base image
+* A dev container with VSCode
+* A dev container for Github code spaces
+* A canned development environment from the command line with:
+    `podman run --userns=keep-id:uid=1000,gid=1000 -it ghcr.io/ansible-community/community-ansible-dev-tools-container:latest`
