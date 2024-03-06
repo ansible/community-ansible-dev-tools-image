@@ -73,8 +73,15 @@ python3-ruamel-yaml \
 python3-wheel \
     && microdnf clean all
 
+RUN \
+mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \
+git config --system --add safe.directory /
+
 # use zsh+oh-my-zsh
 RUN chsh -s $(which zsh) podman
 
 USER podman
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+RUN \
+chmod 755 /home/podman/.oh-my-zsh && \
+chmod 755 /home/podman/.oh-my-zsh/cache
