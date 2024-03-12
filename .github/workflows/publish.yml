@@ -3,9 +3,16 @@ on: [push]
 jobs:
   publish-image:
     permissions: write-all
-    runs-on: ubuntu-latest
+    runs-on: devtools-multiarch-builder
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -13,22 +20,29 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Print podman version
-        run: podman version
 
-      - name: Install ansible-builder
-        run: python3 -m pip install ansible-builder
+      - name: Build multi-architecture base image
+        uses: docker/build-push-action@v5
+        with:
+          context: $GITHUB_WORKSPACE
+          file: base/ContainerFile
+          push: false
+          tags: |
+            localhost/community-ansible-dev-tools-container-base:latest-amd64
+            localhost/community-ansible-dev-tools-container-base:latest-arm64
+          platforms: linux/amd64,linux/arm64
 
-      - name: Build the base image
+      - name: Create a build context and ContainerFile for the final image
         run: |
-          podman build -t community-ansible-dev-tools-container-base -f $GITHUB_WORKSPACE/base/ContainerFile
+          ansible-builder create -f $GITHUB_WORKSPACE/execution-environment.yml -v3
 
-      - name: List available images
-        run: |
-          podman images
-
-      - name: Build and publish final image
-        run: |
-          ansible-builder build -f $GITHUB_WORKSPACE/execution-environment.yml -t ghcr.io/ansible-community/community-ansible-dev-tools-container:latest -v3
-          podman push ghcr.io/ansible-community/community-ansible-dev-tools-container:latest
+      - name: Build and push multi-architecture final image
+        uses: docker/build-push-action@v5
+        with:
+          context: $GITHUB_WORKSPACE/context
+          file: ContainerFile
+          push: true
+          tags: |
+            ghcr.io/ansible-community/community-ansible-dev-tools-container:latest-amd64
+            ghcr.io/ansible-community/community-ansible-dev-tools-container:latest-arm64
+          platforms: linux/amd64,linux/arm64
