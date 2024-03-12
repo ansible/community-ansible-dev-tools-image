@@ -38,11 +38,15 @@ jobs:
         with:
           context: .
           file: base/Containerfile
+          load: true
           push: false
           tags: |
             localhost/community-ansible-dev-tools-container-base:latest-amd64
             localhost/community-ansible-dev-tools-container-base:latest-arm64
           platforms: linux/amd64,linux/arm64
+
+      - name: Show built base images
+        run: docker images
 
       - name: Create a build context and ContainerFile for the final image
         run: |
