@@ -38,7 +38,7 @@ jobs:
         with:
           context: .
           file: base/Containerfile
-          push: false
+          push: true
           tags: |
             localhost/community-ansible-dev-tools-container-base:latest-amd64
             localhost/community-ansible-dev-tools-container-base:latest-arm64
