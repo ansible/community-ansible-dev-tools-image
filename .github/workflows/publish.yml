@@ -33,7 +33,7 @@ jobs:
       - name: Build multi-architecture base image
         uses: docker/build-push-action@v5
         with:
-          context: $GITHUB_WORKSPACE
+          context: .
           file: base/Containerfile
           push: false
           tags: |
@@ -48,7 +48,7 @@ jobs:
       - name: Build and push multi-architecture final image
         uses: docker/build-push-action@v5
         with:
-          context: $GITHUB_WORKSPACE/context
+          context: context
           file: context/Containerfile
           push: true
           tags: |
