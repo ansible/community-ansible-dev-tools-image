@@ -66,6 +66,10 @@ jobs:
         run: |
           docker manifest push localhost:5000/community-ansible-dev-tools-container-base:latest --insecure
 
+      - name: Inspect base image manifest
+        run: |
+          docker manifest inspect localhost:5000/community-ansible-dev-tools-container-base --insecure -v
+
       - name: Create a build context and ContainerFile for the final image
         run: |
           ansible-builder create -f $GITHUB_WORKSPACE/execution-environment.yml -v3
