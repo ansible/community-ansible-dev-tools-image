@@ -3,7 +3,7 @@ version: 3
 
 images:
   base_image:
-    name: localhost/community-ansible-dev-tools-container-base:latest
+    name: community-ansible-dev-tools-container-base:latest
 
 dependencies:
   ansible_runner:
