@@ -1,5 +1,14 @@
 name: publish
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+
 jobs:
   publish-image:
     permissions: write-all
@@ -25,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: $GITHUB_WORKSPACE
-          file: base/ContainerFile
+          file: base/Containerfile
           push: false
           tags: |
             localhost/community-ansible-dev-tools-container-base:latest-amd64
@@ -40,7 +49,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: $GITHUB_WORKSPACE/context
-          file: ContainerFile
+          file: context/Containerfile
           push: true
           tags: |
             ghcr.io/ansible-community/community-ansible-dev-tools-container:latest-amd64
