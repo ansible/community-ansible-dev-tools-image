@@ -64,7 +64,7 @@ jobs:
 
       - name: Push base image manifest to local registry
         run: |
-          docker manifest push localhost:5000/community-ansible-dev-tools-container-base:latest
+          docker manifest push localhost:5000/community-ansible-dev-tools-container-base:latest --insecure
 
       - name: Create a build context and ContainerFile for the final image
         run: |
