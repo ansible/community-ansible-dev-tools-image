@@ -70,6 +70,7 @@ jobs:
         with:
           context: .
           file: base/Containerfile
+          platforms: ${{ matrix.platform }}
           push: true
           tags: localhost:5000/community-ansible-dev-tools-container-base:latest
           cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
