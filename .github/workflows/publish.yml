@@ -55,7 +55,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build base image for ${{ matrix.platform }}
         uses: docker/build-push-action@v5
         id: build_base
@@ -64,15 +64,14 @@ jobs:
           file: base/Containerfile
           push: true
           tags: localhost:5000/community-ansible-dev-tools-container-base:latest
-          platforms: linux/amd64,linux/arm64
           cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
           cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-      
+
       - name: Show available images & base image manifest
         run: |
           curl -X GET http://localhost:5000/v2/community-ansible-dev-tools-container-base/tags/list
           docker manifest inspect localhost:5000/community-ansible-dev-tools-container-base --insecure -v
-      
+
       - name: Create a build context and ContainerFile for the final image
         run: |
           ansible-builder create -f $GITHUB_WORKSPACE/execution-environment.yml -v3
