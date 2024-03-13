@@ -86,3 +86,6 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 RUN \
 chmod 755 /home/podman/.oh-my-zsh && \
 chmod 755 /home/podman/.oh-my-zsh/cache
+
+COPY ./requirements.txt requirements.txt
+RUN python3 -m pip install -r requirements.txt
