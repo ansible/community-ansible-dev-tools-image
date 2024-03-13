@@ -12,7 +12,7 @@ on:
     - cron: '0 0 * * *'
 
 env:
-  FINAL_IMAGE: ansible/community-ansible-dev-tools-container
+  FINAL_IMAGE: ghcr.io/ansible/community-ansible-dev-tools-container
 
 jobs:
   build:
