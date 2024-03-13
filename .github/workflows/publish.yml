@@ -59,6 +59,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install ansible-builder
+        id: ansible-builder-install
+        run: |
+          python3 -m pip install ansible-builder
+
       - name: Build base image for ${{ matrix.platform }}
         uses: docker/build-push-action@v5
         id: build_base
