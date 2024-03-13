@@ -85,7 +85,7 @@ jobs:
         run: |
           ansible-builder create -f $GITHUB_WORKSPACE/execution-environment.yml -v3
 
-      - name: Build and push final image by digest
+      - name: Build and push final image by digest for ${{ matrix.platform }}
         id: build
         uses: docker/build-push-action@v5
         with:
