@@ -71,7 +71,7 @@ jobs:
         uses: docker/build-push-action@v5
         id: build_base
         with:
-          context: .
+          context: base
           provenance: false
           file: base/Containerfile
           platforms: ${{ matrix.platform }}

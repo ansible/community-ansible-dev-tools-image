@@ -14,7 +14,7 @@ LABEL org.opencontainers.image.authors "Ansible DevTools"
 LABEL org.opencontainers.image.vendor "Red Hat"
 LABEL org.opencontainers.image.licenses "GPL-3.0"
 
-RUN dnf -y makecache && microdnf -y update
+RUN microdnf -y makecache && microdnf -y update
 RUN microdnf -y install shadow-utils
 RUN rpm --setcaps shadow-utils 2>/dev/null
 RUN \
