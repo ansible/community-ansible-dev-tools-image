@@ -90,7 +90,7 @@ jobs:
 
       - name: Create a build context and ContainerFile for the final image
         run: |
-          ansible-builder create -f ${{ github.workspace }}/execution-environment.yml -v3
+          ansible-builder create -f ${{ github.workspace }}/execution-environment.yml --output-filename Containerfile -v3
 
       - name: Build and push final image by digest for ${{ matrix.platform }}
         id: build
