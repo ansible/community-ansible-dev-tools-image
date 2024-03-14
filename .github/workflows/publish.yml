@@ -33,7 +33,7 @@ jobs:
         include:
           - builder: devtools-multiarch-runner
             platform: linux/amd64
-          - builder: devtools-amd64-runner
+          - builder: devtools-multiarch-runner
             platform: linux/arm64
 
     steps:
@@ -146,7 +146,7 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          docker buildx imagetools create ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}:latest \
+          docker buildx imagetools create -t ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}:latest \
             $(printf '${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}@sha256:%s ' *)
 
       - name: Inspect image
