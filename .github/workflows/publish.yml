@@ -33,7 +33,7 @@ jobs:
         include:
           - builder: devtools-multiarch-builder
             platform: linux/amd64
-          - builder: devtools-multiarch-builder
+          - builder: devtools-amd64-runner
             platform: linux/arm64
 
     steps:
