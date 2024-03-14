@@ -102,9 +102,9 @@ jobs:
         id: build
         uses: docker/build-push-action@v5
         with:
-          context: context
+          context: $GITHUB_WORKSPACE/context
           provenance: false
-          file: context/Containerfile
+          file: $GITHUB_WORKSPACE/context/Containerfile
           build-contexts: |
             ${{ env.FINAL_IMAGE }}-base=docker-image://localhost:5000/${{ env.FINAL_IMAGE }}-base:latest
           platforms: ${{ matrix.platform }}
