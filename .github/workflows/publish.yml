@@ -31,9 +31,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - builder: devtools-multiarch-runner
+          - builder: devtools-multiarch-builder
             platform: linux/amd64
-          - builder: devtools-multiarch-runner
+          - builder: devtools-multiarch-builder
             platform: linux/arm64
 
     steps:
