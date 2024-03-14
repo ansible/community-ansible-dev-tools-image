@@ -13,10 +13,6 @@ dependencies:
     package_pip: ansible-core
 
   galaxy: requirements.yml
-      
-  python: requirements.txt
-
-  system: bindep.txt
 
 options:
   container_init:
