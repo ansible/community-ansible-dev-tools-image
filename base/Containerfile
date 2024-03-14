@@ -2,15 +2,53 @@
 # container-in-container support and all installs all binary dependencies
 FROM quay.io/fedora/fedora-minimal:39
 
+# When building for multiple-architectures in parallel using emulation
+# it's really easy for one/more dnf processes to timeout or mis-count
+# the minimum download rates.  Bump both to be extremely forgiving of
+# an overworked host.
+RUN echo -e "\n\n# Added during image build" >> /etc/dnf/dnf.conf && \
+    echo -e "minrate=100\ntimeout=60\n" >> /etc/dnf/dnf.conf
+
 LABEL org.opencontainers.image.source https://github.com/ansible-community/community-ansible-dev-tools-container/blob/main/base/ContainerFile
 LABEL org.opencontainers.image.authors "Ansible DevTools"
 LABEL org.opencontainers.image.vendor "Red Hat"
 LABEL org.opencontainers.image.licenses "GPL-3.0"
 
-RUN microdnf -y update
+RUN microdnf -y makecache && microdnf -y update
 RUN microdnf -y install shadow-utils
 RUN rpm --setcaps shadow-utils 2>/dev/null
-RUN microdnf -y install python3-devel echo podman fuse-overlayfs openssh-clients zsh util-linux-user which git --exclude container-selinux
+RUN \
+microdnf install -y \
+python3-devel \
+echo \
+podman \
+fuse-overlayfs \
+openssh-clients \
+zsh \
+util-linux-user \
+which \
+git \
+dumb-init \
+# ansible-pylibssh needs:
+gcc \
+git-core \
+libssh-devel \
+python3-markupsafe \
+# ansible-navigator needs:
+ncurses \
+oniguruma-devel \
+python3-bcrypt \
+python3-cffi \
+python3-pip \
+# TO-DO: Do we need this?
+python3-pynacl \
+# TO-DO: Do we need this?
+python3-pyrsistent \
+python3-pyyaml \
+python3-ruamel-yaml \
+python3-wheel \
+--exclude container-selinux \
+    && microdnf clean all
 
 RUN useradd podman; \
         echo -e "podman:1:999\npodman:1001:64535" > /etc/subuid; \
@@ -50,28 +88,8 @@ ENV _CONTAINERS_USERNS_CONFIGURED=""
 
 # base developer environment setup
 
-# install adt specific binary dependencies
-RUN \
-microdnf install -y \
-dumb-init \
-# ansible-pylibssh needs:
-gcc \
-git-core \
-libssh-devel \
-python3-markupsafe \
-# ansible-navigator needs:
-oniguruma-devel \
-python3-bcrypt \
-python3-cffi \
-python3-pip \
-# TO-DO: Do we need this?
-python3-pynacl \
-# TO-DO: Do we need this?
-python3-pyrsistent \
-python3-pyyaml \
-python3-ruamel-yaml \
-python3-wheel \
-    && microdnf clean all
+COPY ./requirements.txt requirements.txt
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
 RUN \
 mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \

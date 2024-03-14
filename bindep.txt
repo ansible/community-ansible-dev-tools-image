@@ -1,2 +1,0 @@
-# From creator-ee
-ncurses
