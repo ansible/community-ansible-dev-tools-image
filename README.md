@@ -2,8 +2,6 @@
 
 This repo contains the files and configuration to build a container called `community-ansible-dev-tools-container`
 
-
-
 The `community-ansible-dev-tools-container` container can be used:
 
 * As an ansible execution environment or ansible execution environment base image
@@ -11,4 +9,4 @@ The `community-ansible-dev-tools-container` container can be used:
 * A dev container for Github code spaces
 * A canned development environment from the command line with:
 
-    `podman run -it ghcr.io/ansible-community/community-ansible-dev-tools-container:latest`
+    `podman run -it ghcr.io/ansible/community-ansible-dev-tools-container:latest`

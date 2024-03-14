@@ -20,7 +20,7 @@ env:
 
 jobs:
   build:
-    runs-on: devtools-multiarch-builder
+    runs-on: ${{ matrix.builder }}
     services:
       registry:
         image: registry:2
@@ -30,9 +30,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        include:
+          - builder: devtools-multiarch-runner
+            platform: linux/amd64
+          - builder: devtools-amd64-runner
+            platform: linux/arm64
+
     steps:
       - name: Prepare
         run: |

@@ -27,6 +27,7 @@ additional_build_steps:
     - LABEL org.opencontainers.image.authors "Ansible DevTools"
     - LABEL org.opencontainers.image.vendor "Red Hat"
     - LABEL org.opencontainers.image.licenses "GPL-3.0"
+    - LABEL org.opencontainers.image.description "A community container image for Ansible Devtools."
   append_final:
     # Related to https://github.com/ohmyzsh/ohmyzsh/issues/6835
     # This is done in the original base image, but, somewhere in
