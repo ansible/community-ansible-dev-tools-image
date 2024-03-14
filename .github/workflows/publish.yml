@@ -96,15 +96,15 @@ jobs:
 
       - name: Create a build context and ContainerFile for the final image
         run: |
-          ansible-builder create -f $GITHUB_WORKSPACE/execution-environment.yml -v3
+          ansible-builder create -f ${{ github.workspace }}/execution-environment.yml -v3
 
       - name: Build and push final image by digest for ${{ matrix.platform }}
         id: build
         uses: docker/build-push-action@v5
         with:
-          context: $GITHUB_WORKSPACE/context
+          context: ${{ github.workspace }}/context
           provenance: false
-          file: $GITHUB_WORKSPACE/context/Containerfile
+          file: ${{ github.workspace }}/context/Containerfile
           build-contexts: |
             ${{ env.FINAL_IMAGE }}-base=docker-image://localhost:5000/${{ env.FINAL_IMAGE }}-base:latest
           platforms: ${{ matrix.platform }}
