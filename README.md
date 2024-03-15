@@ -1,4 +1,5 @@
-[![ci-cd](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/ci-cd.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/ci-cd.yml)
+![Nightly Builds Status](https://img.shields.io/github/actions/workflow/status/ansible/community-ansible-dev-tools-container/ci.yml?event=schedule&label=ci-cd)
+
 # community-ansible-dev-tools-container
 
 This repo contains the files and configuration to build a container called `community-ansible-dev-tools-container`
