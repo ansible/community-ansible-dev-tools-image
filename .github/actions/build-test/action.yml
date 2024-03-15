@@ -33,13 +33,6 @@ runs:
         # network=host driver-opt needed to push to local registry
         driver-opts: network=host
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Install ansible-builder
       shell: bash
       id: ansible-builder-install
