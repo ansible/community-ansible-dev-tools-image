@@ -1,4 +1,5 @@
-![Nightly Builds Status](https://img.shields.io/github/actions/workflow/status/ansible/community-ansible-dev-tools-container/ci.yml?event=schedule&label=ci-cd)
+![Nightly Builds](https://img.shields.io/github/actions/workflow/status/ansible/community-ansible-dev-tools-container/ci.yml?event=schedule&label=ci-cd&link=https%3A%2F%2Fgithub.com%2Fansible%2Fcommunity-ansible-dev-tools-container%2Factions%2Fworkflows%2Fcd.yml%3Fquery%3Devent%253Aschedule)
+
 
 # community-ansible-dev-tools-container
 
