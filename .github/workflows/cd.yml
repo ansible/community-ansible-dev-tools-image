@@ -1,7 +1,10 @@
 ---
-name: ci-cd
+name: cd
 
 on:
+  push:
+    tags:
+      - '*'
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
@@ -11,7 +14,7 @@ jobs:
     uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test.yml@main
     with:
       registry: ghcr.io
-  merge-release:
+  publish:
     uses: ansible/community-ansible-dev-tools-container/.github/workflows/merge-release.yml@main
     needs: build-test
     if: success('build-test')

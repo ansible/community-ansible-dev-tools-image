@@ -11,15 +11,15 @@ env:
   FINAL_IMAGE: community-ansible-dev-tools-container
 
 jobs:
-  merge:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Download digests
         uses: actions/download-artifact@v4
         with:
-            path: /tmp/digests
-            pattern: digests-*
-            merge-multiple: true
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -48,7 +48,7 @@ jobs:
         working-directory: /tmp/digests
         run: |
             docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}@sha256:%s ' *) \
+              $(printf '${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}@sha256:%s ' *) \
                 --annotation "org.opencontainers.image.description=A community container image for Ansible Devtools."
 
       - name: Inspect image
