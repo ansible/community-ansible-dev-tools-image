@@ -1,0 +1,10 @@
+---
+name: publish
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test-publish:
+    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test-release.yml@main

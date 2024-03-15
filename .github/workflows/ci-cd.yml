@@ -1,0 +1,14 @@
+---
+name: publish
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  build-test-publish:
+    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test-release.yml@main
+    with:
+      registry: ghcr.io
+      publish: true
