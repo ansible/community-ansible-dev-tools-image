@@ -1,5 +1,5 @@
 ---
-name: publish
+name: "Build, test & optionally publish"
 
 on:
   workflow_call:
