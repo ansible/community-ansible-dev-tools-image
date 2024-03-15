@@ -6,6 +6,30 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  BUILDX_NO_DEFAULT_ATTESTATIONS: 1
+  NAMESPACE: ansible
+  FINAL_IMAGE: community-ansible-dev-tools-container
+
 jobs:
   build-test:
-    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test.yml@main
+    runs-on: ${{ matrix.builder }}
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - builder: devtools-multiarch-builder
+            platform: linux/amd64
+          - builder: devtools-arm64-runner
+            platform: linux/arm64
+    
+    steps:
+      - uses: ansible/community-ansible-dev-tools-container/.github/actions/build-test@main
+        with:
+          registry: ghcr.io
