@@ -45,6 +45,13 @@ jobs:
     needs: build-test
     if: success('build-test')
     steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Push final manifest to ghcr.io
         uses: ansible/community-ansible-dev-tools-container/.github/actions/merge-release@main
         with:
