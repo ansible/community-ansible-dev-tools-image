@@ -2,9 +2,12 @@
 name: ci
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
-  build-test-publish:
+  build-test:
     uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test.yml@main
