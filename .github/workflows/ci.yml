@@ -32,5 +32,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build the container image and test it
+      - name: Build the container image for ${{ matrix.platform }} and test it
         uses: ansible/community-ansible-dev-tools-container/.github/actions/build-test@main
