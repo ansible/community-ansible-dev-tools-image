@@ -6,6 +6,12 @@ inputs:
   registry:
     description: Target registry to push the final image.
     default: "localhost:5000"
+  namespace:
+    description: Namespace of the container image.
+    default: ansible
+  final_image:
+    description: Name of the final image.
+    default: community-ansible-dev-tools-container
 
 runs:
   using: composite
@@ -15,7 +21,7 @@ runs:
       run: |
         platform=${{ matrix.platform }}
         echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-  
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -54,15 +60,15 @@ runs:
         file: base/Containerfile
         platforms: ${{ matrix.platform }}
         push: true
-        tags: localhost:5000/${{ env.FINAL_IMAGE }}-base:latest
+        tags: localhost:5000/${{ inputs.final_image }}-base:latest
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
     - name: Show available images & base image manifest
       shell: bash
       run: |
-        curl -X GET http://localhost:5000/v2/${{ env.FINAL_IMAGE }}-base/tags/list
-        docker manifest inspect localhost:5000/${{ env.FINAL_IMAGE }}-base --insecure -v
+        curl -X GET http://localhost:5000/v2/${{ inputs.final_image }}-base/tags/list
+        docker manifest inspect localhost:5000/${{ inputs.final_image }}-base --insecure -v
 
     - name: Create a build context and ContainerFile for the final image
       shell: bash
@@ -77,9 +83,9 @@ runs:
         provenance: false
         file: ${{ github.workspace }}/context/Containerfile
         build-contexts: |
-          ${{ env.FINAL_IMAGE }}-base=docker-image://localhost:5000/${{ env.FINAL_IMAGE }}-base:latest
+          ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
-        outputs: type=image,name=${{ inputs.registry }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+        outputs: type=image,name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 

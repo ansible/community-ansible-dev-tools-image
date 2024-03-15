@@ -10,11 +10,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-test:
-    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test.yml@main
-    with:
-      registry: ghcr.io
-  publish:
-    uses: ansible/community-ansible-dev-tools-container/.github/workflows/merge-release.yml@main
-    needs: build-test
-    if: success('build-test')
+  build-test-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: ansible/community-ansible-dev-tools-container/.github/actions/build-test@main
+        with:
+          registry: ghcr.io
