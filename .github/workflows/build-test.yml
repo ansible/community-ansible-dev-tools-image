@@ -1,5 +1,5 @@
 ---
-name: publish
+name: "build-test"
 
 on:
   workflow_call:
@@ -7,9 +7,6 @@ on:
       registry:
         type: string
         default: "localhost:5000"
-      publish:
-        type: boolean
-        default: false
 
 env:
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
@@ -123,50 +120,3 @@ jobs:
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
-
-  merge:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.publish == true }}
-    needs:
-      - build
-    steps:
-      - name: Download digests
-        uses: actions/download-artifact@v4
-        with:
-          path: /tmp/digests
-          pattern: digests-*
-          merge-multiple: true
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            name=${{ inputs.registry }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}
-          labels: |
-            org.opencontainers.image.description=A community container image for Ansible Devtools.
-          tags: |
-            latest
-            type=schedule,pattern=latest
-            type=ref,event=tag
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create manifest list and push
-        working-directory: /tmp/digests
-        run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ inputs.registry }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}@sha256:%s ' *) \
-             --annotation "org.opencontainers.image.description=A community container image for Ansible Devtools."
-
-      - name: Inspect image
-        run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}:latest

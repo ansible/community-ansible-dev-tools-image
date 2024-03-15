@@ -1,5 +1,5 @@
 ---
-name: publish
+name: ci-cd
 
 on:
   schedule:
@@ -7,8 +7,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-test-publish:
-    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test-release.yml@main
+  build-test:
+    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test.yml@main
     with:
       registry: ghcr.io
-      publish: true
+  merge-release:
+    uses: ansible/community-ansible-dev-tools-container/.github/workflows/merge-release.yml@main
+    needs: build-test
+    if: success('build-test')

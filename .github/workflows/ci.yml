@@ -1,5 +1,5 @@
 ---
-name: publish
+name: ci
 
 on:
   pull_request:
@@ -7,4 +7,4 @@ on:
 
 jobs:
   build-test-publish:
-    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test-release.yml@main
+    uses: ansible/community-ansible-dev-tools-container/.github/workflows/build-test.yml@main

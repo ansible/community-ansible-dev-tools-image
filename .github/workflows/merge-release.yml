@@ -1,0 +1,56 @@
+---
+name: merge-release
+
+on:
+  workflow_call:
+
+env:
+  BUILDX_NO_DEFAULT_ATTESTATIONS: 1
+  REGISTRY: ghcr.io
+  NAMESPACE: ansible
+  FINAL_IMAGE: community-ansible-dev-tools-container
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+            path: /tmp/digests
+            pattern: digests-*
+            merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            name=${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}
+          labels: |
+            org.opencontainers.image.description=A community container image for Ansible Devtools.
+          tags: |
+            latest
+            type=schedule,pattern=latest
+            type=ref,event=tag
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+            docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}@sha256:%s ' *) \
+                --annotation "org.opencontainers.image.description=A community container image for Ansible Devtools."
+
+      - name: Inspect image
+        run: |
+            docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.FINAL_IMAGE }}:latest
