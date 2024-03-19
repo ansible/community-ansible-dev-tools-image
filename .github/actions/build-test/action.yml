@@ -45,21 +45,28 @@ runs:
 
     - name: Build base image for ${{ matrix.platform }}
       uses: docker/build-push-action@v5
-      id: build-base
+      id: build_base
       with:
         context: base
         provenance: false
         file: base/Containerfile
         platforms: ${{ matrix.platform }}
-        load: true
-        tags: ${{ inputs.namespace }}/${{ inputs.final_image }}-base:latest
+        push: true
+        tags: localhost:5000/${{ inputs.final_image }}-base:latest
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
     - name: Show available images & base image manifest
       shell: bash
       run: |
+        curl -X GET http://localhost:5000/v2/${{ inputs.final_image }}-base/tags/list
+        docker manifest inspect localhost:5000/${{ inputs.final_image }}-base --insecure -v
+
+    - name: Show available images & base image manifest
+      shell: bash
+      run: |
         docker images
+        docker manifest inspect ${{ inputs.namespace }}/${{ inputs.final_image }}-base:latest
 
     - name: Create a build context and Containerfile for the final image
       shell: bash
@@ -76,6 +83,8 @@ runs:
         load: true
         tags: |
           ${{ inputs.namespace }}/${{ inputs.final_image }}:test
+        build-contexts: |
+          ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
@@ -98,6 +107,8 @@ runs:
         context: ${{ github.workspace }}/context
         provenance: false
         file: ${{ github.workspace }}/context/Containerfile
+        build-contexts: |
+          ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
         outputs: type=image,name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
 
