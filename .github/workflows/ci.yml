@@ -38,6 +38,8 @@ jobs:
 
       - name: Build the container image for ${{ matrix.platform }} and test it
         uses: NilashishC/community-ansible-dev-tools-container/.github/actions/build-test@tests
+        with:
+          registry: ghcr.io
 
   publish:
     runs-on: ubuntu-latest
