@@ -62,12 +62,6 @@ runs:
         curl -X GET http://localhost:5000/v2/${{ inputs.final_image }}-base/tags/list
         docker manifest inspect localhost:5000/${{ inputs.final_image }}-base --insecure -v
 
-    - name: Show available images & base image manifest
-      shell: bash
-      run: |
-        docker images
-        docker manifest inspect ${{ inputs.namespace }}/${{ inputs.final_image }}-base:latest
-
     - name: Create a build context and Containerfile for the final image
       shell: bash
       run: |
