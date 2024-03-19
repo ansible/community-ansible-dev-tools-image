@@ -52,7 +52,7 @@ runs:
         file: base/Containerfile
         platforms: ${{ matrix.platform }}
         load: true
-        tags: ${{ inputs.final_image }}-base:latest
+        tags: ${{ inputs.namespace }}/${{ inputs.final_image }}-base:latest
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
@@ -60,7 +60,7 @@ runs:
       shell: bash
       run: |
         docker images
-        docker manifest inspect ${{ inputs.final_image }}-base
+        docker manifest inspect ${{ inputs.namespace }}/${{ inputs.final_image }}-base:latest
 
     - name: Create a build context and ContainerFile for the final image
       shell: bash
