@@ -82,12 +82,22 @@ runs:
         platforms: ${{ matrix.platform }}
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-    
-    - name: Test the image
+
+    # ----- tests start here -----
+    - name: Test if image has ADT
       shell: bash
       run: |
         docker run --rm ${{ inputs.namespace }}/${{ inputs.final_image }}:test -c "adt --version"
-    
+
+    - name: Test if image can run podman inside it
+      shell: bash
+      run: |
+        docker run --rm -it \
+        --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
+        --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
+        --device /dev/fuse \ 
+        ${{ inputs.namespace }}/${{ inputs.final_image }}:test -c "podman run hello"
+
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push
       uses: docker/build-push-action@v5
