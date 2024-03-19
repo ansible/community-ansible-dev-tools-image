@@ -83,9 +83,14 @@ runs:
         build-contexts: |
           ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
-        outputs: type=image,name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
+        outputs: type=image,name=localhost:5000/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
+
+    - name: Pull final image from local registry for testing
+      shell: bash
+      run: |
+        docker pull localhost:5000/${{ inputs.namespace }}/${{ inputs.final_image }}
 
     - name: Export digest
       shell: bash
