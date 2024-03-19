@@ -45,22 +45,22 @@ runs:
 
     - name: Build base image for ${{ matrix.platform }}
       uses: docker/build-push-action@v5
-      id: build_base
+      id: build-base
       with:
         context: base
         provenance: false
         file: base/Containerfile
         platforms: ${{ matrix.platform }}
-        push: true
-        tags: localhost:5000/${{ inputs.final_image }}-base:latest
+        load: true
+        tags: ${{ inputs.final_image }}-base:latest
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
     - name: Show available images & base image manifest
       shell: bash
       run: |
-        curl -X GET http://localhost:5000/v2/${{ inputs.final_image }}-base/tags/list
-        docker manifest inspect localhost:5000/${{ inputs.final_image }}-base --insecure -v
+        docker images
+        docker manifest inspect ${{ inputs.final_image }}-base
 
     - name: Create a build context and ContainerFile for the final image
       shell: bash
@@ -68,14 +68,12 @@ runs:
         ansible-builder create -f ${{ github.workspace }}/execution-environment.yml --output-filename Containerfile -v3
     
     - name: Build final image for ${{ matrix.platform }}
-      id: build
+      id: build-final
       uses: docker/build-push-action@v5
       with:
         context: ${{ github.workspace }}/context
         provenance: false
         file: ${{ github.workspace }}/context/Containerfile
-        build-contexts: |
-          ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         load: true
         tags: |
           ${{ inputs.namespace }}/${{ inputs.final_image }}:test
@@ -84,29 +82,23 @@ runs:
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
     # ----- tests start here -----
-    - name: Test if image has ADT
+    - name: Run tests on the image before pushing
       shell: bash
       run: |
-        docker run --rm ${{ inputs.namespace }}/${{ inputs.final_image }}:test -c "adt --version"
-
-    - name: Test if image can run podman inside it
-      shell: bash
-      run: |
-        docker run --rm \
-        --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
-        --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
-        --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
-        -c "podman run hello"
+        docker run --rm -v ${{ github.workspace }}/tests:/home/podman/tests \
+          --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
+          --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
+          --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
+          -c "sh tests/test.sh"
+    # ----- tests end here -----
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
-      id: push
+      id: push-final
       uses: docker/build-push-action@v5
       with:
         context: ${{ github.workspace }}/context
         provenance: false
         file: ${{ github.workspace }}/context/Containerfile
-        build-contexts: |
-          ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
         outputs: type=image,name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
 
