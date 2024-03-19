@@ -6,6 +6,8 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  pull_request:
+    branches: [main]
   push:
     tags:
       - '*'
@@ -40,7 +42,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the container image for ${{ matrix.platform }} and test it
-        uses: ansible/community-ansible-dev-tools-container/.github/actions/build-test@main
+        uses: NilashishC/community-ansible-dev-tools-container/.github/actions/build-test@main
         with:
           registry: ghcr.io
 
@@ -57,6 +59,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push final manifest to ghcr.io
-        uses: ansible/community-ansible-dev-tools-container/.github/actions/merge-release@main
+        uses: NilashishC/community-ansible-dev-tools-container/.github/actions/merge-release@main
         with:
           registry: ghcr.io

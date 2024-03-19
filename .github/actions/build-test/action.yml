@@ -88,7 +88,7 @@ runs:
       run: |
         docker run --rm ${{ inputs.namespace }}/${{ inputs.final_image }}:test -c "adt --version"
     
-    - name: Push final image by digest for ${{ matrix.platform }}
+    - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push
       uses: docker/build-push-action@v5
       with:
@@ -98,9 +98,7 @@ runs:
         build-contexts: |
           ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
-        outputs: type=image,name=localhost:5000/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
-        cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-        cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
+        outputs: type=image,name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
 
     - name: Export digest
       shell: bash
@@ -117,7 +115,9 @@ runs:
         path: /tmp/digests/*
         if-no-files-found: error
         retention-days: 1
-    
+
+    # this step is ONLY needed for maintainence of self hosted runners
     - name: Cleanup docker
       shell: bash
       run: |
+        docker system prune -af --volumes
