@@ -1,17 +1,15 @@
-# switch to tests directory
+echo "::group::Starting tests"
+
+echo "::debug::switching to tests directory"
 cd /home/podman/tests
 
-# validate that adt is installed
+echo "::debug::validate that adt is installed"
 adt --version
 
-echo "ADT test passed"
-
-# validate that container in container works
+echo "::debug::validate that container in container works"
 podman run hello
 
-echo "podman test passed"
-
-# validate that ansible-navigator works inside the container with EE
+echo "::debug::validate that ansible-navigator works inside the container with EE"
 ansible-navigator run site.yml --mode stdout
 
-echo "navigator test passed"
+echo "::endgroup::"
