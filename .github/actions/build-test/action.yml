@@ -90,6 +90,7 @@ runs:
     - name: Pull final image from local registry for testing
       shell: bash
       run: |
+        docker images
         docker pull localhost:5000/${{ inputs.namespace }}/${{ inputs.final_image }}@${{ steps.build.outputs.digest }}
 
     - name: Export digest
