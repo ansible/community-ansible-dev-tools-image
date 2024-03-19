@@ -92,7 +92,7 @@ runs:
     - name: Test if image can run podman inside it
       shell: bash
       run: |
-        docker run --rm -it \
+        docker run --rm \
         --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
         --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
         --device /dev/fuse \ 
