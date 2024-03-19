@@ -88,7 +88,7 @@ runs:
       run: |
         docker run --rm ${{ inputs.namespace }}/${{ inputs.final_image }}:test -c "adt --version"
     
-    - name: Build and push final image by digest for ${{ matrix.platform }}
+    - name: Push final image by digest for ${{ matrix.platform }}
       id: push
       uses: docker/build-push-action@v5
       with:
@@ -101,8 +101,6 @@ runs:
         outputs: type=image,name=localhost:5000/${{ inputs.namespace }}/${{ inputs.final_image }},push-by-digest=true,name-canonical=true,push=true
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-        tags: |
-          ${{ inputs.namespace }}/${{ inputs.final_image }}:test
 
     - name: Export digest
       shell: bash
