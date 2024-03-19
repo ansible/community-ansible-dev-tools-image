@@ -60,9 +60,8 @@ runs:
       shell: bash
       run: |
         docker images
-        docker manifest inspect ${{ inputs.namespace }}/${{ inputs.final_image }}-base:latest
 
-    - name: Create a build context and ContainerFile for the final image
+    - name: Create a build context and Containerfile for the final image
       shell: bash
       run: |
         ansible-builder create -f ${{ github.workspace }}/execution-environment.yml --output-filename Containerfile -v3
