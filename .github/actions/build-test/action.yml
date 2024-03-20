@@ -83,16 +83,22 @@ runs:
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
-    # ----- tests start here -----
-    #- name: Run tests on the image before pushing
-    #  shell: bash
-    #  run: |
-    #    docker run --rm -v ${{ github.workspace }}/tests:/home/podman/tests \
-    #      --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
-    #      --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
-    #      --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
-    #      -c "sh tests/test.sh"
-    # ----- tests end here -----
+    - name: Run tests on the image before pushing
+      shell: bash
+      id: run-tests
+      run: |
+        docker run --rm -v ${{ github.workspace }}/tests:/home/podman/tests \
+          --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
+          --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
+          --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
+          -c "sh tests/test.sh"
+          echo "test_rc=echo $?" >> "$GITHUB_OUTPUT"
+
+    - name: Error out if run-tests failed.
+      if: ${{ steps.run-tests.outputs.test_rc != 0 }}"
+      shell: bash
+      run: |
+        echo "::error file=.github/actions/build-test/action.yml,line=86,title=Build failed!::One or more tests have failed. Please check the logs."
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final
