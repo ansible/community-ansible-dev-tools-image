@@ -4,7 +4,7 @@ set -ex
 
 cd /home/podman/tests
 
-adt --version
+adt1 --version
 
 podman run hello
 

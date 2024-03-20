@@ -92,22 +92,12 @@ runs:
           --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
           --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
           -c "tests/test.sh"
-        echo "test_rc=$?" >> "$GITHUB_OUTPUT"
-    
-    - shell: bash
-      run: |
-        x=${{ steps.run-tests.outputs.test_rc }}"
-        echo $x
 
-    # usually, the error rc from within the container will propagate back
-    # and the workflow will fail by itself in the previous step
-    # this is kept here just as a fail safe
-    - name: Error out if run-tests failed.
-      if: ${{ steps.run-tests.outputs.test_rc != 0 }}"
+    - name: Error out if run-tests failed
+      if: steps.run-tests.outcome != 'success'
       shell: bash
       run: |
         echo "::error file=.github/actions/build-test/action.yml,line=86,title=Build failed!::One or more tests have failed. Please check the logs."
-        exit 1
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final
