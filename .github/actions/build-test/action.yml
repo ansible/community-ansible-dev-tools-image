@@ -42,16 +42,6 @@ runs:
       id: ansible-builder-verify
       run: |
         ansible-builder --version
-    
-    - shell: bash
-      id: test-1
-      run: |
-        echo "test_rc=$?" >> "$GITHUB_OUTPUT"
-
-    - name: Error out if run-tests failed.
-      shell: bash
-      run: |
-        export="${{ steps.test-1.outputs.test_rc }}"
 
     - name: Build base image for ${{ matrix.platform }}
       uses: docker/build-push-action@v5
@@ -108,9 +98,11 @@ runs:
     # the workflow will fail by itself in the previous step
     # this is kept here just as a fail safe
     - name: Error out if run-tests failed.
+      if: ${{ steps.run-tests.outputs.test_rc != 0 }}"
       shell: bash
       run: |
-        export="${{ steps.run-tests.outputs.test_rc }}"
+        echo "::error file=.github/actions/build-test/action.yml,line=86,title=Build failed!::One or more tests have failed. Please check the logs."
+        exit 1
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final
