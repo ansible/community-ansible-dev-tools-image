@@ -91,7 +91,7 @@ runs:
           --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
           --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
           --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
-          -c "/bin/bash tests/test.sh"
+          -c "tests/test.sh"
           echo "test_rc=echo $?" >> "$GITHUB_OUTPUT"
 
     - name: Error out if run-tests failed.
