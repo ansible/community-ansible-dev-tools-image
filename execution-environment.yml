@@ -15,6 +15,9 @@ dependencies:
   galaxy: requirements.yml
 
 options:
+  container_init:
+    entrypoint: '["/opt/builder/bin/entrypoint", "dumb-init"]'
+    cmd: '["zsh"]'
   package_manager_path: /usr/bin/microdnf
   user: podman
   workdir: /home/podman
@@ -27,6 +30,13 @@ additional_build_steps:
     - LABEL org.opencontainers.image.licenses "GPL-3.0"
     - LABEL org.opencontainers.image.description "A community container image for Ansible Devtools."
   append_final:
+    # we want the ENTRYPOINT to remain the same, but change CMD to zsh
+    # any changes made to "container_init" results in ENTRYPOINT being removed even if it was not changed
+    # even if we add the same ENTRYPOINT in container_init, "builder create" removes the dumb-init installation step
+    # the workaround is to explicitly add it here
+    - RUN $PYCMD -m pip install --no-cache-dir 'dumb-init==1.2.5'
+    # Related to https://github.com/ohmyzsh/ohmyzsh/issues/6835
+    - RUN chmod 755 /home/podman/.oh-my-zsh && chmod 755 /home/podman/.oh-my-zsh/cache
     # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
     - RUN set -ex
         && ansible --version

@@ -86,6 +86,25 @@ RUN mkdir -p /var/lib/shared/overlay-images \
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
+# In OpenShift, container will run as a random uid number and gid 0. Make sure things
+# are writeable by the root group.
+RUN for dir in \
+      /home/runner \
+      /home/runner/.ansible \
+      /home/runner/.ansible/tmp \
+      /runner \
+      /home/runner \
+      /runner/env \
+      /runner/inventory \
+      /runner/project \
+      /runner/artifacts ; \
+    do mkdir -m 0775 -p $dir ; chmod -R g+rwx $dir ; chgrp -R root $dir ; done && \
+    for file in \
+      /home/runner/.ansible/galaxy_token \
+      /etc/passwd \
+      /etc/group ; \
+    do touch $file ; chmod g+rw $file ; chgrp root $file ; done
+
 # base ansible-dev-tools setup
 
 COPY ./requirements.txt requirements.txt
@@ -95,4 +114,8 @@ RUN \
 mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \
 git config --system --add safe.directory /
 
-COPY ./.bashrc /home/podman/.bashrc
+# use zsh+oh-my-zsh
+RUN chsh -s $(which zsh) podman
+
+USER podman
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

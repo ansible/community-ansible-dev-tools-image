@@ -83,16 +83,15 @@ runs:
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
-    # ----- tests start here -----
-    #- name: Run tests on the image before pushing
-    #  shell: bash
-    #  run: |
-    #    docker run --rm -v ${{ github.workspace }}/tests:/home/podman/tests \
-    #      --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
-    #      --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
-    #      --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
-    #      -c "sh tests/test.sh"
-    # ----- tests end here -----
+    - name: Run tests on the image before pushing
+      shell: bash
+      id: run-tests
+      run: |
+        docker run --rm -v ${{ github.workspace }}/tests:/home/podman/tests \
+          --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
+          --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
+          --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
+          -c "tests/test.sh"
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final
@@ -125,5 +124,6 @@ runs:
     # this step is ONLY needed for maintainence of self hosted runners
     - name: Cleanup docker
       shell: bash
+      if: always()
       run: |
         docker system prune -af --volumes
