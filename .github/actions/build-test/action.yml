@@ -111,7 +111,7 @@ runs:
       run: |
         rm -rf /tmp/digests
         mkdir -p /tmp/digests
-        digest="${{ steps.build-final.outputs.digest }}"
+        digest="${{ steps.push-final.outputs.digest }}"
         touch "/tmp/digests/${digest#sha256:}"
 
     - name: Upload digest
