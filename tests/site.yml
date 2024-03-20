@@ -3,7 +3,7 @@
   gather_facts: true
   tasks:
     - name: Print the facts
-      ansible.builtin.debug:
+      ansible.builtin.debugs:
         var: ansible_facts
 
     - name: Print the hostname

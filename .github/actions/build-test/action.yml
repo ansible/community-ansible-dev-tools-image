@@ -99,6 +99,7 @@ runs:
       shell: bash
       run: |
         echo "::error file=.github/actions/build-test/action.yml,line=86,title=Build failed!::One or more tests have failed. Please check the logs."
+        exit 1
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final
