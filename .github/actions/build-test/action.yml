@@ -45,7 +45,7 @@ runs:
 
     - name: Build base image for ${{ matrix.platform }}
       uses: docker/build-push-action@v5
-      id: build_base
+      id: build-base
       with:
         context: base
         provenance: false
@@ -68,7 +68,7 @@ runs:
         ansible-builder create -f ${{ github.workspace }}/execution-environment.yml --output-filename Containerfile -v3
     
     - name: Build final image for ${{ matrix.platform }}
-      id: build
+      id: build-final
       uses: docker/build-push-action@v5
       with:
         context: ${{ github.workspace }}/context
@@ -89,7 +89,7 @@ runs:
         docker run --rm ${{ inputs.namespace }}/${{ inputs.final_image }}:test -c "adt --version"
     
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
-      id: push
+      id: push-final
       uses: docker/build-push-action@v5
       with:
         context: ${{ github.workspace }}/context
@@ -105,7 +105,7 @@ runs:
       run: |
         rm -rf /tmp/digests
         mkdir -p /tmp/digests
-        digest="${{ steps.build.outputs.digest }}"
+        digest="${{ steps.push-final.outputs.digest }}"
         touch "/tmp/digests/${digest#sha256:}"
 
     - name: Upload digest
