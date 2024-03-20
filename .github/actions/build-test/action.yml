@@ -62,7 +62,7 @@ runs:
         curl -X GET http://localhost:5000/v2/${{ inputs.final_image }}-base/tags/list
         docker manifest inspect localhost:5000/${{ inputs.final_image }}-base --insecure -v
 
-    - name: Create a build context and ContainerFile for the final image
+    - name: Create a build context and Containerfile for the final image
       shell: bash
       run: |
         ansible-builder create -f ${{ github.workspace }}/execution-environment.yml --output-filename Containerfile -v3
@@ -74,20 +74,26 @@ runs:
         context: ${{ github.workspace }}/context
         provenance: false
         file: ${{ github.workspace }}/context/Containerfile
-        build-contexts: |
-          ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         load: true
         tags: |
           ${{ inputs.namespace }}/${{ inputs.final_image }}:test
+        build-contexts: |
+          ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-    
-    - name: Test the image
+
+    # ----- tests start here -----
+    - name: Run tests on the image before pushing
       shell: bash
       run: |
-        docker run --rm ${{ inputs.namespace }}/${{ inputs.final_image }}:test -c "adt --version"
-    
+        docker run --rm -v ${{ github.workspace }}/tests:/home/podman/tests \
+          --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
+          --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
+          --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
+          -c "sh tests/test.sh"
+    # ----- tests end here -----
+
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final
       uses: docker/build-push-action@v5

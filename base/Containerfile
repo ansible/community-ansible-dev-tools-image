@@ -86,7 +86,7 @@ RUN mkdir -p /var/lib/shared/overlay-images \
 
 ENV _CONTAINERS_USERNS_CONFIGURED=""
 
-# base developer environment setup
+# base ansible-dev-tools setup
 
 COPY ./requirements.txt requirements.txt
 RUN python3 -m pip install --no-cache-dir -r requirements.txt
@@ -95,12 +95,4 @@ RUN \
 mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \
 git config --system --add safe.directory /
 
-# use zsh+oh-my-zsh
-RUN chsh -s $(which zsh) podman
-
-USER podman
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# Related to https://github.com/ohmyzsh/ohmyzsh/issues/6835
-RUN \
-chmod 755 /home/podman/.oh-my-zsh && \
-chmod 755 /home/podman/.oh-my-zsh/cache
+COPY ./.bashrc /home/podman/.bashrc
