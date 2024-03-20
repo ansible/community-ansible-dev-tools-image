@@ -94,6 +94,9 @@ runs:
           -c "tests/test.sh"
           echo "test_rc=echo $?" >> "$GITHUB_OUTPUT"
 
+    # usually, the error rc while propagate back and
+    # the workflow will fail by itself in the previous step
+    # this is kept here just as a fail safe
     - name: Error out if run-tests failed.
       if: ${{ steps.run-tests.outputs.test_rc != 0 }}"
       shell: bash
@@ -132,5 +135,6 @@ runs:
     # this step is ONLY needed for maintainence of self hosted runners
     - name: Cleanup docker
       shell: bash
+      if: always()
       run: |
         docker system prune -af --volumes
