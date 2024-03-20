@@ -15,8 +15,6 @@ dependencies:
   galaxy: requirements.yml
 
 options:
-  container_init:
-    entrypoint: '["/usr/bin/bash"]'
   package_manager_path: /usr/bin/microdnf
   user: podman
   workdir: /home/podman
