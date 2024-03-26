@@ -43,13 +43,18 @@ runs:
       run: |
         ansible-builder --version
 
+    - name: Create a build context and Containerfile for base EE
+      shell: bash
+      run: |
+        ansible-builder create -f ${{ github.workspace }}/execution-environment.yml --output-filename Containerfile -v3
+
     - name: Build base image for ${{ matrix.platform }}
       uses: docker/build-push-action@v5
       id: build-base
       with:
-        context: base
+        context: context
         provenance: false
-        file: base/Containerfile
+        file: context/Containerfile
         platforms: ${{ matrix.platform }}
         push: true
         tags: localhost:5000/${{ inputs.final_image }}-base:latest
@@ -62,18 +67,13 @@ runs:
         curl -X GET http://localhost:5000/v2/${{ inputs.final_image }}-base/tags/list
         docker manifest inspect localhost:5000/${{ inputs.final_image }}-base --insecure -v
 
-    - name: Create a build context and Containerfile for the final image
-      shell: bash
-      run: |
-        ansible-builder create -f ${{ github.workspace }}/execution-environment.yml --output-filename Containerfile -v3
-    
     - name: Build final image for ${{ matrix.platform }}
       id: build-final
       uses: docker/build-push-action@v5
       with:
-        context: ${{ github.workspace }}/context
+        context: ${{ github.workspace }}/final
         provenance: false
-        file: ${{ github.workspace }}/context/Containerfile
+        file: ${{ github.workspace }}/final/Containerfile
         load: true
         tags: |
           ${{ inputs.namespace }}/${{ inputs.final_image }}:test
