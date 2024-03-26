@@ -120,6 +120,21 @@ RUN chsh -s $(which zsh) podman
 USER podman
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+# add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
+RUN set -ex \
+&& ansible --version \
+&& ansible-lint --version \
+&& ansible-runner --version \
+&& molecule --version \
+&& molecule drivers \
+&& podman --version \
+&& python3 --version \
+&& git --version \
+&& ansible-galaxy role list \
+&& ansible-galaxy collection list \
+&& rpm -qa \
+&& uname -a
+
 WORKDIR /home/podman
 ENTRYPOINT ["/opt/builder/bin/entrypoint", "dumb-init"]
 CMD ["zsh"]
