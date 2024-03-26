@@ -83,6 +83,13 @@ runs:
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
 
+    - name: Validate if the final image is a valid EE
+      shell: bash
+      run: |
+        python3 -m pip install ansible-navigator
+        ansible-navigator --version
+        ansible-navigator run ${{ github.workspace }}/site.yml --eei ${{ inputs.namespace }}/${{ inputs.final_image }}:test
+
     - name: Run tests on the image before pushing
       shell: bash
       id: run-tests
