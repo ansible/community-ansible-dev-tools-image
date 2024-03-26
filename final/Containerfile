@@ -1,6 +1,8 @@
 # Builds community-ansible-dev-tools-container-base image which provides
 # container-in-container support and all installs all binary dependencies
-FROM quay.io/fedora/fedora-minimal:39
+FROM community-ansible-dev-tools-container-base:latest
+
+USER root
 
 # When building for multiple-architectures in parallel using emulation
 # it's really easy for one/more dnf processes to timeout or mis-count
@@ -19,7 +21,6 @@ RUN microdnf -y install shadow-utils
 RUN rpm --setcaps shadow-utils 2>/dev/null
 RUN \
 microdnf install -y \
-python3-devel \
 echo \
 podman \
 fuse-overlayfs \
@@ -40,10 +41,6 @@ oniguruma-devel \
 python3-bcrypt \
 python3-cffi \
 python3-pip \
-# TO-DO: Do we need this?
-python3-pynacl \
-# TO-DO: Do we need this?
-python3-pyrsistent \
 python3-pyyaml \
 python3-ruamel-yaml \
 python3-wheel \
@@ -61,6 +58,9 @@ ADD $_REPO_URL/podman-containers.conf /home/podman/.config/containers/containers
 RUN mkdir -p /home/podman/.local/share/containers && \
         chown podman:podman -R /home/podman && \
         chmod 644 /etc/containers/containers.conf
+
+# this is done by ansible-builder when changing user and workdir
+RUN chgrp 0 /home/podman && chmod -R ug+rwx /home/podman
 
 # Copy & modify the defaults to provide reference if runtime changes needed.
 # Changes here are required for running with fuse-overlay storage inside container.
@@ -119,3 +119,22 @@ RUN chsh -s $(which zsh) podman
 
 USER podman
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
+RUN set -ex \
+&& ansible --version \
+&& ansible-lint --version \
+&& ansible-runner --version \
+&& molecule --version \
+&& molecule drivers \
+&& podman --version \
+&& python3 --version \
+&& git --version \
+&& ansible-galaxy role list \
+&& ansible-galaxy collection list \
+&& rpm -qa \
+&& uname -a
+
+WORKDIR /home/podman
+ENTRYPOINT ["/opt/builder/bin/entrypoint", "dumb-init"]
+CMD ["zsh"]
