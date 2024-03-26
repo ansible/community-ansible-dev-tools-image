@@ -88,7 +88,7 @@ runs:
       run: |
         python3 -m pip install ansible-navigator
         ansible-navigator --version
-        ansible-navigator run ${{ github.workspace }}/site.yml --eei ${{ inputs.namespace }}/${{ inputs.final_image }}:test
+        ansible-navigator run ${{ github.workspace }}/site.yml --mode stdout --eei ${{ inputs.namespace }}/${{ inputs.final_image }}:test 
 
     - name: Run tests on the image before pushing
       shell: bash
