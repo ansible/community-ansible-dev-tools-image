@@ -86,7 +86,7 @@ runs:
     - name: Validate if the final image is a valid EE
       shell: bash
       run: |
-        python3 -m pip install ansible-navigator
+        python3 -m pip install --upgrade ansible-navigator
         ansible-navigator --version
         ansible-navigator run ${{ github.workspace }}/site.yml --ce docker --mode stdout --eei ${{ inputs.namespace }}/${{ inputs.final_image }}:test 
 
