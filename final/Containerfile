@@ -15,7 +15,7 @@ LABEL org.opencontainers.image.source https://github.com/ansible-community/commu
 LABEL org.opencontainers.image.authors "Ansible DevTools"
 LABEL org.opencontainers.image.vendor "Red Hat"
 LABEL org.opencontainers.image.licenses "GPL-3.0"
-LABEL org.opencontainers.image.description "A execution environment targeted for Ansible content creators."
+LABEL org.opencontainers.image.description "An execution environment targeted for Ansible content creators."
 
 
 RUN microdnf -y makecache && microdnf -y update
