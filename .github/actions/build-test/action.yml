@@ -106,7 +106,7 @@ runs:
       with:
         context: ${{ github.workspace }}/context
         provenance: false
-        file: ${{ github.workspace }}/context/Containerfile
+        file: ${{ github.workspace }}/final/Containerfile
         build-contexts: |
           ${{ inputs.final_image }}-base=docker-image://localhost:5000/${{ inputs.final_image }}-base:latest
         platforms: ${{ matrix.platform }}
