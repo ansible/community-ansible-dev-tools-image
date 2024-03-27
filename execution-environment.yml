@@ -20,9 +20,3 @@ options:
 additional_build_steps:
   prepend_base:
     - RUN $PKGMGR -y install python3-devel
-  append_final:
-    - LABEL org.opencontainers.image.source https://github.com/ansible-community/community-ansible-dev-tools-container/blob/main/base/ContainerFile
-    - LABEL org.opencontainers.image.authors "Ansible DevTools"
-    - LABEL org.opencontainers.image.vendor "Red Hat"
-    - LABEL org.opencontainers.image.licenses "GPL-3.0"
-    - LABEL org.opencontainers.image.description "A base execution environment for Ansible Devtools Container."
