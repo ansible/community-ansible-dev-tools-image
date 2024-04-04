@@ -23,6 +23,7 @@ RUN microdnf -y install shadow-utils
 RUN rpm --setcaps shadow-utils 2>/dev/null
 RUN \
 microdnf install -y \
+tar \
 echo \
 podman \
 fuse-overlayfs \
