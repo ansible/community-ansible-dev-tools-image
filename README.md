@@ -13,3 +13,7 @@ The `community-ansible-dev-tools-container` container can be used:
 * A canned development environment from the command line with:
 
     `podman run -it ghcr.io/ansible/community-ansible-dev-tools-container:latest`
+
+## Code of Conduct
+
+We ask all of our community members and contributors to adhere to the [Ansible code of conduct](http://docs.ansible.com/ansible/latest/community/code_of_conduct.html).
