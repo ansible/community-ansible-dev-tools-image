@@ -1,2 +1,2 @@
-ansible-dev-tools==24.2.0
+ansible-dev-tools
 molecule-plugins[podman]==23.5.3
