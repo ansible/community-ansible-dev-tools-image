@@ -1,6 +1,6 @@
 # Builds community-ansible-dev-tools-container-base image which provides
 # container-in-container support and all installs all binary dependencies
-FROM community-ansible-dev-tools-container-base:latest
+FROM community-ansible-dev-tools-base:latest
 
 USER root
 
