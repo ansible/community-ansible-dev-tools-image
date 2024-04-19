@@ -12,10 +12,27 @@ This image is built on top of [Fedora 39 minimal](quay.io/fedora/fedora-minimal:
 ## Installation
 
 ```bash
-podman pull ghcr.io/ansible/community-ansible-dev-tools-container:latest
+podman pull ghcr.io/ansible/community-ansible-dev-tools:latest
 ```
 
 ## Usage
+
+### Using this as a VS code Dev Container
+
+Dev Containers provide you with a containerized development environment in VS code. Details on what they are and how to use them can be found in [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers).
+
+This image can be used as an image for a Dev Container where you build and consume Ansible content.
+
+This repository comes with a sample [`.devcontainer directory`](https://github.com/ansible/community-ansible-dev-tools-container/tree/main/.devcontainer) with 2 subdirectories - `podman` and `docker` each having it's own
+`devcontainer.json` file.
+
+You can simply copy over the `.devcontainer` directory to your Ansible project and start using it!
+
+### Using this with Github Codespaces
+
+To use this image with [Github Codespaces](https://docs.github.com/en/codespaces/overview), copy the [`devcontainer.json`](https://github.com/ansible/community-ansible-dev-tools-container/blob/main/.devcontainer/devcontainer.json) in this repo to your project and push to Github.
+
+**Note:** If you are planning to start writing a new Ansible playbook project or collection, use [Ansible Creator](https://ansible.readthedocs.io/projects/creator) to scaffold it for you and your project/collection will already have all the `.devcontainer` files ready.
 
 ### Using this image as an EE
 
@@ -69,24 +86,16 @@ The below example shows how to make a custom EE that adds the `amazon.aws` and `
 
 Once this image is built, you can use [`ansible-navigator`](https://ansible.readthedocs.io/projects/navigator/) to reference this image and run your playbooks!
 
-### Using this as a VS code Dev Container
+### Layering ADT and container-in-container support on a custom image
 
-Dev Containers provide you with a containerized development environment in VS code. Details on what they are and how to use them can be found in [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers).
+In order to add the Ansible Devtools package and the container-in-container support with podman using a custom EE or another container image, you can use to the [final
+Containerfile](https://github.com/ansible/community-ansible-dev-tools-container/blob/main/final/Containerfile) from this repository. Update the `FROM` instruction to point to
+your preferred image and build it using `podman` or `docker`.
 
-This image can be used as an image for a Dev Container where you build and consume Ansible content.
-
-This repository comes with a sample [`.devcontainer directory`](https://github.com/ansible/community-ansible-dev-tools-container/tree/main/.devcontainer) with 2 subdirectories - `podman` and `docker` each having it's own
-`devcontainer.json` file.
-
-You can simply copy over the `.devcontainer` directory to your Ansible project and start using it!
-
-### Using this with Github Codespaces
-
-To use this image with [Github Codespaces](https://docs.github.com/en/codespaces/overview), copy the [`devcontainer.json`](https://github.com/ansible/community-ansible-dev-tools-container/blob/main/.devcontainer/devcontainer.json) in this repo to your project and push to Github.
-
-**Note:** If you are planning to start writing a new Ansible playbook project or collection, use [Ansible Creator](https://ansible.readthedocs.io/projects/creator) to scaffold it for you and your project/collection will already have all the `.devcontainer` files ready.
+**Note:** The container-in-container support is added by referencing the [podman image](https://github.com/containers/image_build/tree/main/podman) definition. For more information, read [How to use Podman inside of a container](https://www.redhat.com/sysadmin/podman-inside-container).
 
 ## Related Links
+
 - [adt](https://github.com/ansible/ansible-dev-tools)
 - [ansible-builder](https://github.com/ansible/ansible-builder)
 - [ansible-creator](https://github.com/ansible/ansible-creator)
