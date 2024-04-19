@@ -92,7 +92,7 @@ In order to add the Ansible Devtools package and the container-in-container supp
 Containerfile](https://github.com/ansible/community-ansible-dev-tools-container/blob/main/final/Containerfile) from this repository. Update the `FROM` instruction to point to
 your preferred image and build it using `podman` or `docker`.
 
-**Note:** The container-in-container support is added by referencing the [podman image](https://github.com/containers/image_build/tree/main/podman) definition. For more information, read [How to use Podman inside of a container](https://www.redhat.com/sysadmin/podman-inside-container).
+**Note:** The container-in-container support is added with the help of the [podman image](https://github.com/containers/image_build/tree/main/podman) definition. For more information, read [How to use Podman inside of a container](https://www.redhat.com/sysadmin/podman-inside-container).
 
 ## Related Links
 
