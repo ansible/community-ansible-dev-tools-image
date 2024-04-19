@@ -16,6 +16,7 @@ on:
 jobs:
   build-test:
     runs-on: ${{ matrix.builder }}
+    permissions: write-all
     services:
       registry:
         image: registry:2
