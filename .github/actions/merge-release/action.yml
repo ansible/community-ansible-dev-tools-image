@@ -11,7 +11,7 @@ inputs:
     default: ansible
   final_image:
     description: Name of the final image.
-    default: community-ansible-dev-tools-container
+    default: community-ansible-dev-tools
 
 runs:
   using: composite
@@ -28,15 +28,13 @@ runs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      
+
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: |
           name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.final_image }}
-        labels: |
-          org.opencontainers.image.description=A community container image for Ansible Devtools.
         tags: |
           latest
           type=schedule,pattern=latest
@@ -47,7 +45,7 @@ runs:
       working-directory: /tmp/digests
       run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            --annotation "index:org.opencontainers.image.description=A multi-arch community container image for Ansible Devtools." \
+            --annotation "manifest:org.opencontainers.image.description=A multi-arch community container image for Ansible Devtools." \
             $(printf '${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.final_image }}@sha256:%s ' *) \
 
     - name: Inspect image
