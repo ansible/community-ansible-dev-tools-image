@@ -6,17 +6,13 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
-    tags:
-      - '*'
-  schedule:
-    - cron: '0 0 * * *'
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
   build-test:
     runs-on: ${{ matrix.builder }}
-    permissions: write-all
     services:
       registry:
         image: registry:2
