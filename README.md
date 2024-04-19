@@ -1,4 +1,5 @@
-[![cd](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml)
+[![ci](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/ci.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/ci.yml)
+[![publish](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml/badge.svg?branch=main)](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml)
 
 # community-ansible-dev-tools
 
