@@ -1,6 +1,6 @@
 [![cd](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml)
 
-# community-ansible-dev-tools-container
+# community-ansible-dev-tools
 
 A container image for Ansible Development Tools (ADT).
 
