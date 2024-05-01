@@ -112,7 +112,7 @@ runs:
     - name: Copy the image from docker to podman
       shell: bash
       run: |
-        docker images --format docker-daemon:{{.Repository}}:{{.Tag}} | grep ${{ inputs.namespace }}/${{ inputs.final_image }}:test | xargs podman pull
+        docker images --format docker-daemon:{{.Repository}}:{{.Tag}} | grep ${{ inputs.namespace }}/${{ inputs.final_image }}:test | xargs /home/linuxbrew/.linuxbrew/bin/podman pull
       if: matrix.platform == 'linux/amd64'
 
         
@@ -121,7 +121,7 @@ runs:
       shell: bash
       id: run-tests-podman
       run: >
-        podman run --rm
+        /home/linuxbrew/.linuxbrew/bin/podman run --rm
         -v ${{ github.workspace }}/tests:/home/podman/tests
         --security-opt seccomp=unconfined
         --security-opt label=disable
