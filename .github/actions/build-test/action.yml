@@ -31,12 +31,12 @@ runs:
         # network=host driver-opt needed to push to local registry
         driver-opts: network=host
     
-    - name: Install podman
+    - name: Install podman from brew for a later version
       shell: bash
       id: podman-install
       run: |
-        sudo apt-get update
-        sudo apt-get install -y podman
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        sudo brew install podman
 
     - name: Install ansible-builder
       shell: bash
