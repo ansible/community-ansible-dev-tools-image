@@ -106,7 +106,12 @@ runs:
           --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
           --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
           -c "tests/test.sh"
-    
+
+    - name: Copy the image from docker to podman
+      shell: bash
+      run: |
+        docker images --format docker-daemon:{{.Repository}}:{{.Tag}} | grep ${{ inputs.namespace }}/${{ inputs.final_image }}:test | xargs podman pull
+        
     - name: Run tests on the image before pushing with podman
       continue-on-error: true
       shell: bash
