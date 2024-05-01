@@ -113,16 +113,16 @@ runs:
       id: run-tests-podman
       run: >
         podman run --rm
-          -v ${{ github.workspace }}/tests:/home/podman/tests
-          --security-opt seccomp=unconfined
-          --security-opt label=disable
-          --security-opt apparmor=unconfined
-          --cap-add=SYS_ADMIN
-          --cap-add=SYS_RESOURCE
-          --device /dev/fuse
-          --userns=keep-id:uid=1000,gid=1000
-          ${{ inputs.namespace }}/${{ inputs.final_image }}:test
-          -c "tests/test.sh"
+        -v ${{ github.workspace }}/tests:/home/podman/tests
+        --security-opt seccomp=unconfined
+        --security-opt label=disable
+        --security-opt apparmor=unconfined
+        --cap-add=SYS_ADMIN
+        --cap-add=SYS_RESOURCE
+        --device /dev/fuse
+        --userns=keep-id:uid=1000,gid=1000
+        ${{ inputs.namespace }}/${{ inputs.final_image }}:test
+        -c "tests/test.sh"
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final
