@@ -35,6 +35,7 @@ runs:
       shell: bash
       id: podman-install
       run: |
+        sudo apt remove -y podman
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         /home/linuxbrew/.linuxbrew/bin/brew install podman
       if: matrix.platform == 'linux/amd64'
