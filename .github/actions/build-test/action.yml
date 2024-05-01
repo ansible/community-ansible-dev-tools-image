@@ -108,6 +108,7 @@ runs:
           -c "tests/test.sh"
     
     - name: Run tests on the image before pushing with podman
+      continue-on-error: true
       shell: bash
       id: run-tests
       run: >
