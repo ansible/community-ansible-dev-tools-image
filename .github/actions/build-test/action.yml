@@ -107,7 +107,7 @@ runs:
           --security-opt seccomp=unconfined --security-opt label=disable --security-opt apparmor=unconfined \
           --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
           --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
-          -c "tests/test.sh"
+          -c "/home/podman/tests/test.sh"
 
     - name: Copy the image from docker to podman
       shell: bash
