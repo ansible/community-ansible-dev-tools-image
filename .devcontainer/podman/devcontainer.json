@@ -14,7 +14,9 @@
 		"--security-opt",
 		"apparmor=unconfined",
 		"--userns=host",
-		"--hostname=ansible-dev-container"
+		"--hostname=ansible-dev-container",
+		"--volume",
+		"ansible-dev-tools-container-storage:/var/lib/containers"
 	],
 	"customizations": {
 		"vscode": {
