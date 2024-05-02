@@ -30,16 +30,7 @@ runs:
       with:
         # network=host driver-opt needed to push to local registry
         driver-opts: network=host
-    
-    - name: Install podman from brew for a later version
-      shell: bash
-      id: podman-install
-      run: |
-        sudo apt remove -y podman
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        /home/linuxbrew/.linuxbrew/bin/brew install podman
-      if: matrix.platform == 'linux/amd64'
-      
+          
     - name: Install ansible-builder
       shell: bash
       id: ansible-builder-install
@@ -108,32 +99,6 @@ runs:
           --cap-add=SYS_ADMIN --cap-add=SYS_RESOURCE \
           --device /dev/fuse ${{ inputs.namespace }}/${{ inputs.final_image }}:test \
           -c "/home/podman/tests/test.sh"
-
-    - name: Copy the image from docker to podman
-      shell: bash
-      run: |
-        docker images --format docker-daemon:{{.Repository}}:{{.Tag}} | grep ${{ inputs.namespace }}/${{ inputs.final_image }}:test | xargs /home/linuxbrew/.linuxbrew/bin/podman pull
-      if: matrix.platform == 'linux/amd64'
-
-        
-    - name: Run tests on the image before pushing with podman
-      continue-on-error: true
-      shell: bash
-      id: run-tests-podman
-      run: >
-        /home/linuxbrew/.linuxbrew/bin/podman run --rm
-        -v ${{ github.workspace }}/tests:/home/podman/tests
-        --security-opt seccomp=unconfined
-        --security-opt label=disable
-        --security-opt apparmor=unconfined
-        --cap-add=SYS_ADMIN
-        --cap-add=SYS_RESOURCE
-        --device /dev/fuse
-        --userns=keep-id:uid=1000,gid=1000
-        ${{ inputs.namespace }}/${{ inputs.final_image }}:test
-        -c "tests/test.sh"
-      if: matrix.platform == 'linux/amd64'
-
 
     - name: Push the built image to ${{ inputs.registry }} by digest for ${{ matrix.platform }}
       id: push-final

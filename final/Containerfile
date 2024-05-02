@@ -117,10 +117,17 @@ RUN \
 mkdir -p ~/.ansible/roles /usr/share/ansible/roles /etc/ansible/roles && \
 git config --system --add safe.directory /
 
-# use zsh+oh-my-zsh
+# The dev container for docker runs as podman
 RUN chsh -s $(which zsh) podman
+# The dev container for docker runs as root
+RUN chsh -s $(which zsh) root
 
+
+# Install oh-my-zsh for both users
 USER podman
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+USER root
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # add some helpful CLI commands to check we do not remove them inadvertently and output some helpful version information at build time.
@@ -138,6 +145,11 @@ RUN set -ex \
 && rpm -qa \
 && uname -a
 
-WORKDIR /home/podman
+# Make a workdir usable by either the podman or root user
+RUN mkdir -p /workdir && chown podman:podman /workdir
+
+# Set the default user to podman, this will be overriden in the podman dev container
+USER podman
+WORKDIR /workdir
 ENTRYPOINT ["/opt/builder/bin/entrypoint", "dumb-init"]
 CMD ["zsh"]
