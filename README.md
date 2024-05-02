@@ -139,10 +139,6 @@ Alternatively, the public key can added in-line in the `gitconfig`
   signingkey = key:: ssh-rsa AAAAB3N
 ```
 
-
-
-user.signingkey
-
 ### Layering ADT and container-in-container support on a custom image
 
 In order to add the Ansible Devtools package and the container-in-container support with podman using a custom EE or another container image, you can use to the [final
