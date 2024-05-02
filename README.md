@@ -87,6 +87,62 @@ The below example shows how to make a custom EE that adds the `amazon.aws` and `
 
 Once this image is built, you can use [`ansible-navigator`](https://ansible.readthedocs.io/projects/navigator/) to reference this image and run your playbooks!
 
+### Using with podman from the command-line
+
+
+If you want to use this image with `podman` the following command to run the container.
+
+```bash
+podman run 	-it --rm \
+ --cap-add=SYS_ADMIN \
+ --cap-add=SYS_RESOURCE \
+ --device "/dev/fuse" \
+ --hostname=ansible-dev-container \
+ --name=ansible-dev-container \
+ --security-opt "apparmor=unconfined" \
+ --security-opt "label=disable" \
+ --security-opt "seccomp=unconfined" \
+ --user=root \
+ --userns=host \
+ -e SSH_AUTH_SOCK=$SSH_AUTH_SOCK \
+ -v $HOME/.gitconfig:/root/.gitconfig \
+ -v $PWD:/workdir \
+ -v $SSH_AUTH_SOCK:$SSH_AUTH_SOCK:Z \
+ ghcr.io/ansible/community-ansible-dev-tools:latest
+```
+
+Note:
+- The `security-opt` and `cap-add` options are used to allow `podman` to run in the container.
+- The `device` option is used to allow the container to access the `/dev/fuse` device.
+- `userns=host` maps the default user account to root user in container.
+- This command will mount the current directory to `/workdir` in the container
+- The SSH agent socket is also mounted to the container to allow for SSH key forwarding. 
+- The user's `.gitconfig` is mounted to the container to allow for git operations.
+
+### Signing git commits (SSH)
+
+If the `user.signingkey` in the `gitconfig` points directly public key on the file system that key may not be available in the container. 
+
+If only one key is preset, the `ssh-add` command can be used for key retrieval in the user's `gitconfig`:
+
+```toml
+[gpg "ssh"]
+	defaultKeyCommand = ssh-add -L
+```
+
+Alternatively, the public key can added in-line in the `gitconfig`
+
+```toml
+[user]
+  email = user@compnay.com
+  name = User's fullname
+  signingkey = key:: ssh-rsa AAAAB3N
+```
+
+
+
+user.signingkey
+
 ### Layering ADT and container-in-container support on a custom image
 
 In order to add the Ansible Devtools package and the container-in-container support with podman using a custom EE or another container image, you can use to the [final

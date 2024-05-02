@@ -1,23 +1,21 @@
 {
 	"name": "ansible-dev-container-podman",
 	"image": "ghcr.io/ansible/community-ansible-dev-tools:latest",
-	"containerUser": "podman",
+	"containerUser": "root",
 	"runArgs": [
-		"--security-opt",
-		"seccomp=unconfined",
-		"--security-opt",
-		"label=disable",
 		"--cap-add=SYS_ADMIN",
 		"--cap-add=SYS_RESOURCE",
 		"--device",
 		"/dev/fuse",
 		"--security-opt",
+		"seccomp=unconfined",
+		"--security-opt",
+		"label=disable",
+		"--security-opt",
 		"apparmor=unconfined",
-		"--userns=keep-id:uid=1000,gid=1000",
-		"--user=root",
+		"--userns=host",
 		"--hostname=ansible-dev-container"
 	],
-	"updateRemoteUserUID": true,
 	"customizations": {
 		"vscode": {
 			"extensions": [
