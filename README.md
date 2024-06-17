@@ -1,6 +1,13 @@
 [![ci](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/ci.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/ci.yml)
 [![publish](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml/badge.svg?branch=main)](https://github.com/ansible/community-ansible-dev-tools-container/actions/workflows/cd.yml)
 
+# Notice
+The container defintion and build has moved into the repository for the ansible-dev-tools project:
+
+[Docs](https://ansible.readthedocs.io/projects/dev-tools/container/)
+[Repo](https://github.com/ansible/ansible-dev-tools)
+
+
 # community-ansible-dev-tools
 
 A container image for Ansible Development Tools (ADT).
